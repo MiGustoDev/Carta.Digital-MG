@@ -7,6 +7,7 @@ import { getTodayISO } from '../../utils/helpers';
 import ImageUploader from './ImageUploader';
 import Button from '../common/Button';
 import Alert from '../common/Alert';
+import RequiredAsterisk from '../common/RequiredAsterisk';
 import { Save, X } from 'lucide-react';
 
 const PromotionForm = ({ initialData, onSubmit, onCancel, onRequestClose, isSubmitting }) => {
@@ -95,7 +96,7 @@ const PromotionForm = ({ initialData, onSubmit, onCancel, onRequestClose, isSubm
         {/* Image upload */}
         <div>
           <label className="label">
-            Imagen <span className="text-red-500">*</span>
+            Imagen <RequiredAsterisk />
           </label>
           <ImageUploader
             currentImageUrl={initialData?.imageUrl}
@@ -112,7 +113,7 @@ const PromotionForm = ({ initialData, onSubmit, onCancel, onRequestClose, isSubm
         {/* Title */}
         <div>
           <label className="label" htmlFor="title">
-            Título <span className="text-red-500">*</span>
+            Título <RequiredAsterisk />
           </label>
           <input
             id="title"
@@ -155,7 +156,7 @@ const PromotionForm = ({ initialData, onSubmit, onCancel, onRequestClose, isSubm
         {/* Date */}
         <div>
           <label className="label" htmlFor="date">
-            Fecha de la promoción <span className="text-red-500">*</span>
+            Fecha de la promoción <RequiredAsterisk />
           </label>
           <input
             id="date"
