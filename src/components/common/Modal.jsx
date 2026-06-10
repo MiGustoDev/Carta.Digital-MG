@@ -5,17 +5,29 @@ import { X } from 'lucide-react';
 const Modal = ({ isOpen, onClose, title, children, maxWidth = 'max-w-lg' }) => {
   const [isVisible, setIsVisible] = useState(isOpen);
   const [isClosing, setIsClosing] = useState(false);
+  const [isEntering, setIsEntering] = useState(false);
   const closeTimerRef = useRef(null);
+  const openTimerRef = useRef(null);
 
   useEffect(() => {
     if (isOpen) {
       setIsVisible(true);
       setIsClosing(false);
+      setIsEntering(false);
       document.body.style.overflow = 'hidden';
+
+      if (openTimerRef.current) {
+        window.cancelAnimationFrame(openTimerRef.current);
+      }
+
+      openTimerRef.current = window.requestAnimationFrame(() => {
+        setIsEntering(true);
+      });
     } else {
       document.body.style.overflow = '';
       setIsVisible(false);
       setIsClosing(false);
+      setIsEntering(false);
     }
     return () => {
       document.body.style.overflow = '';
@@ -33,6 +45,9 @@ const Modal = ({ isOpen, onClose, title, children, maxWidth = 'max-w-lg' }) => {
   useEffect(() => () => {
     if (closeTimerRef.current) {
       window.clearTimeout(closeTimerRef.current);
+    }
+    if (openTimerRef.current) {
+      window.cancelAnimationFrame(openTimerRef.current);
     }
   }, []);
 
@@ -64,7 +79,7 @@ const Modal = ({ isOpen, onClose, title, children, maxWidth = 'max-w-lg' }) => {
       {/* Backdrop */}
       <div
         className={`absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-200 ease-out ${
-          isClosing ? 'opacity-0' : 'opacity-100'
+          isClosing ? 'opacity-0' : isEntering ? 'opacity-100' : 'opacity-0'
         }`}
         onClick={handleRequestClose}
       />
@@ -74,7 +89,11 @@ const Modal = ({ isOpen, onClose, title, children, maxWidth = 'max-w-lg' }) => {
         className={`
           relative bg-white rounded-card shadow-card-hover w-full ${maxWidth}
           max-h-[90vh] flex flex-col transition-all duration-200 ease-out
-          ${isClosing ? 'opacity-0 translate-y-2 scale-95' : 'opacity-100 translate-y-0 scale-100'}
+          ${isClosing
+            ? 'opacity-0 translate-y-2 scale-95'
+            : isEntering
+              ? 'opacity-100 translate-y-0 scale-100'
+              : 'opacity-0 translate-y-2 scale-95'}
         `}
       >
         {/* Header */}
