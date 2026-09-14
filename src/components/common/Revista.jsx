@@ -9,6 +9,7 @@ import 'swiper/css';
 import 'swiper/css/effect-flip';
 import 'react-medium-image-zoom/dist/styles.css';
 import './Revista.css';
+import tapaImg from '../../assets/tapa1.jpg';
 
 const Revista = ({ promotions = [], loading = false }) => {
   const [paginaActual, setPaginaActual] = useState(0);
@@ -27,17 +28,20 @@ const Revista = ({ promotions = [], loading = false }) => {
     };
   }, []);
 
-  // Tapa por defecto
-  const tapaUrl = `${import.meta.env.BASE_URL}images/catalogo/tapa1.jpg`;
+  // Tapa por defecto (importada directamente como asset para evitar 404 en servidor)
+  const tapaUrl = tapaImg;
 
   // Extraer las imágenes de las promociones activas cargadas por el admin
   const promoPages = promotions
     .filter((p) => p && p.imageUrl)
     .map((p) => {
       const url = p.imageUrl;
-      return url.startsWith('/')
-        ? `${import.meta.env.BASE_URL}${url.slice(1)}`
-        : url;
+      if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('data:')) {
+        return url;
+      }
+      const baseUrl = import.meta.env.BASE_URL;
+      const cleanUrl = url.startsWith('/') ? url.slice(1) : url;
+      return `${baseUrl}${cleanUrl}`;
     });
 
   // La portada es tapa1.jpg y luego siguen las promociones de la carta digital

@@ -3,6 +3,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import { ChevronDown, Search, X } from 'lucide-react';
 import { sucursales } from '../../data/sucursalesData';
+import logoImg from '../../assets/logo-migusto-2025.png';
 
 const Header = () => {
   const location = useLocation();
@@ -47,7 +48,7 @@ const Header = () => {
         {/* Logo */}
         <a href="https://migusto.com.ar/" className="flex items-center gap-2.5 group">
           <img
-            src={`${import.meta.env.BASE_URL}logo-migusto-2025.png`}
+            src={logoImg}
             alt="Mi Gusto Logo"
             className="w-12 h-12 object-contain rounded-btn"
           />
