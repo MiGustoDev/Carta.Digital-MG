@@ -144,7 +144,7 @@ const Home = () => {
     <div className="min-h-screen bg-background mt-0 pt-0 pb-6 sm:py-6">
       <div key={viewMode} className="animate-view-fade-in">
         {viewMode === 'interactive' ? (
-          <Revista />
+          <Revista promotions={promotions} loading={loading} />
         ) : (
           <FeedList
             promotions={promotions}

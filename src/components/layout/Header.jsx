@@ -47,7 +47,7 @@ const Header = () => {
         {/* Logo */}
         <a href="https://migusto.com.ar/" className="flex items-center gap-2.5 group">
           <img
-            src={`${import.meta.env.BASE_URL}Logo Mi Gusto 2025.png`}
+            src={`${import.meta.env.BASE_URL}logo-migusto-2025.png`}
             alt="Mi Gusto Logo"
             className="w-12 h-12 object-contain rounded-btn"
           />
