@@ -244,8 +244,18 @@ export const getActivePromotions = async (lastDoc = null) => {
 
     return { promotions: promotions.map(toApp), lastVisible, hasMore, error: null };
   } catch (error) {
-    console.error('Error fetching active promotions:', error);
-    return { promotions: [], lastVisible: null, hasMore: false, error: 'Error al cargar las promociones.' };
+    console.error('Error fetching active promotions from Supabase, falling back to local:', error);
+    try {
+      const offset = (lastDoc && !isNaN(lastDoc)) ? Number(lastDoc) : 0;
+      const allLocal = await getLocalPromotions();
+      const active = allLocal.filter((p) => p && p.active);
+      const promotions = active.slice(offset, offset + PAGE_SIZE);
+      const lastVisible = promotions[promotions.length - 1]?.id || null;
+      const hasMore = offset + promotions.length < active.length;
+      return { promotions, lastVisible, hasMore, error: null };
+    } catch (fallbackError) {
+      return { promotions: [], lastVisible: null, hasMore: false, error: 'Error al cargar las promociones.' };
+    }
   }
 };
 
@@ -260,11 +270,10 @@ export const getAllPromotions = async (filterStatus = 'all', sortOrder = 'newest
         promotions = promotions.filter(p => !p.active);
       }
       
-      const sortDir = sortOrder === 'newest' ? -1 : 1;
       promotions.sort((a, b) => {
-        const dateA = new Date(a.date || 0);
-        const dateB = new Date(b.date || 0);
-        return (dateA - dateB) * sortDir;
+        const dateA = new Date(a.date || a.createdAt);
+        const dateB = new Date(b.date || b.createdAt);
+        return sortOrder === 'newest' ? dateB - dateA : dateA - dateB;
       });
       
       return { promotions, error: null };
@@ -292,8 +301,23 @@ export const getAllPromotions = async (filterStatus = 'all', sortOrder = 'newest
 
     return { promotions: promotions.map(toApp), error: null };
   } catch (error) {
-    console.error('Error fetching all promotions:', error);
-    return { promotions: [], error: 'Error al cargar las promociones.' };
+    console.error('Error fetching all promotions from Supabase, falling back to local:', error);
+    try {
+      let promotions = await getLocalPromotions();
+      if (filterStatus === 'active') {
+        promotions = promotions.filter(p => p.active);
+      } else if (filterStatus === 'inactive') {
+        promotions = promotions.filter(p => !p.active);
+      }
+      promotions.sort((a, b) => {
+        const dateA = new Date(a.date || a.createdAt);
+        const dateB = new Date(b.date || b.createdAt);
+        return sortOrder === 'newest' ? dateB - dateA : dateA - dateB;
+      });
+      return { promotions, error: null };
+    } catch (fallbackErr) {
+      return { promotions: [], error: 'Error al cargar las promociones.' };
+    }
   }
 };
 
