@@ -62,6 +62,53 @@ Feed scrolleable de promociones con panel de administración completo, construid
 
 ---
 
+## 🚀 Instalación
+
+Sigue estos pasos para clonar y ejecutar el proyecto localmente:
+
+### 1. Prerrequisitos
+
+- [Node.js](https://nodejs.org/) (versión 18 o superior recomendada)
+- Gestor de paquetes (`npm` o `pnpm`)
+
+### 2. Clonar el repositorio
+
+```bash
+git clone <URL_DEL_REPOSITORIO>
+cd Carta.Digital-MG
+```
+
+### 3. Instalar dependencias
+
+```bash
+npm install
+# o si utilizas pnpm
+pnpm install
+```
+
+### 4. Configurar variables de entorno (Opcional)
+
+Si utilizas Supabase como base de datos y autenticación, crea un archivo `.env` en la raíz del proyecto:
+
+```env
+VITE_SUPABASE_URL=tu_supabase_url
+VITE_SUPABASE_ANON_KEY=tu_supabase_anon_key
+```
+
+> **Nota:** Si no se configuran estas variables, la aplicación cuenta con un modo de respaldo local que almacena los datos en **IndexedDB / LocalStorage**.
+
+### 5. Iniciar el servidor de desarrollo
+
+```bash
+npm run dev
+# o con pnpm
+pnpm run dev
+```
+
+Accede a `http://localhost:5173` en tu navegador.
+
+---
+
 ## 📋 Scripts disponibles
 
 | Comando | Descripción |
